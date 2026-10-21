@@ -1,0 +1,323 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    :root {
+        --pharmacy-primary: #087f8c;
+        --pharmacy-deep: #075985;
+        --pharmacy-mint: #e8fbf7;
+        --pharmacy-ink: #17324d;
+        --pharmacy-muted: #64748b;
+    }
+
+    .pharmacy-page {
+        color: var(--pharmacy-ink);
+        padding-bottom: 2.5rem;
+    }
+
+    .pharmacy-hero {
+        position: relative;
+        overflow: hidden;
+        padding: clamp(1.5rem, 4vw, 3rem);
+        border-radius: 1.5rem;
+        color: #fff;
+        background: linear-gradient(125deg, #075985 0%, #087f8c 55%, #12a594 100%);
+        box-shadow: 0 18px 45px rgba(7, 89, 133, .18);
+    }
+
+    .pharmacy-hero::after {
+        content: "";
+        position: absolute;
+        width: 250px;
+        height: 250px;
+        right: -65px;
+        top: -90px;
+        border: 35px solid rgba(255,255,255,.09);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .hero-icon {
+        display: inline-grid;
+        place-items: center;
+        width: 74px;
+        height: 74px;
+        border-radius: 22px;
+        background: rgba(255,255,255,.16);
+        border: 1px solid rgba(255,255,255,.24);
+        font-size: 2rem;
+    }
+
+    .hero-kicker {
+        display: inline-block;
+        padding: .4rem .8rem;
+        border-radius: 999px;
+        background: rgba(255,255,255,.15);
+        font-size: .78rem;
+        font-weight: 700;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+    }
+
+    .pharmacy-panel {
+        border: 1px solid #e3edf2;
+        border-radius: 1.35rem;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 12px 34px rgba(15, 55, 80, .07);
+    }
+
+    .pharmacy-panel-header {
+        padding: 1.35rem 1.5rem;
+        color: #fff;
+        background: linear-gradient(110deg, #087f8c, #0e9f91);
+    }
+
+    .pharmacy-panel-body {
+        padding: clamp(1.15rem, 3vw, 2rem);
+    }
+
+    .section-label {
+        display: flex;
+        align-items: center;
+        gap: .65rem;
+        margin: .25rem 0 1.2rem;
+        font-size: 1rem;
+        font-weight: 800;
+        color: #075985;
+    }
+
+    .section-label i {
+        display: inline-grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        color: #087f8c;
+        background: #e8fbf7;
+    }
+
+    .pharmacy-page .form-label {
+        color: #334155;
+        font-size: .9rem;
+        font-weight: 700;
+        margin-bottom: .5rem;
+    }
+
+    .pharmacy-page .form-control,
+    .pharmacy-page .form-select {
+        min-height: 49px;
+        border: 1px solid #d8e5eb;
+        border-radius: .85rem;
+        background-color: #fbfdfe;
+        color: #17324d;
+        padding: .75rem .9rem;
+        transition: border-color .2s, box-shadow .2s, background .2s;
+    }
+
+    .pharmacy-page textarea.form-control {
+        min-height: 110px;
+    }
+
+    .pharmacy-page .form-control:focus,
+    .pharmacy-page .form-select:focus {
+        border-color: #0e9f91;
+        background: #fff;
+        box-shadow: 0 0 0 .22rem rgba(14, 159, 145, .13);
+    }
+
+    .field-hint {
+        color: var(--pharmacy-muted);
+        font-size: .78rem;
+        margin-top: .35rem;
+    }
+
+    .pharmacy-btn {
+        border: 0;
+        border-radius: 999px;
+        padding: .8rem 1.35rem;
+        font-weight: 700;
+        transition: transform .18s, box-shadow .18s;
+    }
+
+    .pharmacy-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 7px 18px rgba(15, 55, 80, .12);
+    }
+
+    .btn-pharmacy {
+        color: #fff;
+        background: linear-gradient(110deg, #087f8c, #0e9f91);
+    }
+
+    .btn-pharmacy:hover, .btn-pharmacy:focus {
+        color: #fff;
+        background: linear-gradient(110deg, #066b77, #0b897e);
+    }
+
+    .expiry-warning {
+        margin-top: .5rem;
+        font-size: .82rem;
+        padding: .5rem .75rem;
+        border-radius: .6rem;
+    }
+    .expiry-warn-danger { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+    .expiry-warn-soon   { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+
+    @media (max-width: 575px) {
+        .pharmacy-hero { border-radius: 1rem; }
+        .pharmacy-panel { border-radius: 1rem; }
+        .hero-icon { width: 58px; height: 58px; font-size: 1.6rem; }
+        .pharmacy-actions .btn { width: 100%; margin: .25rem 0 !important; }
+    }
+</style>
+
+<div class="container py-4 pharmacy-page">
+    <!-- Pharmacy hero -->
+    <section class="pharmacy-hero mb-4">
+        <div class="row align-items-center g-4 position-relative">
+            <div class="col-lg-8">
+                <span class="hero-kicker mb-3">Pharmacy Inventory</span>
+                <h1 class="fw-bold display-6 mt-2 mb-3">
+                    <i class="fas fa-pen-to-square me-2"></i>Edit Medicine
+                </h1>
+                <p class="fs-5 mb-3" style="color:rgba(255,255,255,.88)">
+                    Update medicine details, stock levels, batch numbers,
+                    and expiry information to keep your inventory accurate.
+                </p>
+                <div class="d-flex flex-wrap gap-2">
+                    <span class="hero-kicker"><i class="fas fa-shield-heart me-1"></i> Care-focused records</span>
+                    <span class="hero-kicker"><i class="fas fa-boxes-stacked me-1"></i> Stock control</span>
+                </div>
+            </div>
+            <div class="col-lg-4 text-center d-none d-lg-block">
+                <div class="hero-icon mx-auto" style="width:150px;height:150px;border-radius:42px;font-size:5rem">
+                    <i class="fas fa-prescription-bottle-medical"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Medicine edit form -->
+    <section class="pharmacy-panel mb-4">
+        <div class="pharmacy-panel-header">
+            <h2 class="h4 fw-bold mb-1"><i class="fas fa-clipboard-list me-2"></i>Medicine Information</h2>
+            <p class="mb-0" style="color:rgba(255,255,255,.85)">Update the details below and save your changes.</p>
+        </div>
+
+        <div class="pharmacy-panel-body">
+            <form method="POST">
+                <div class="section-label"><i class="fas fa-pills"></i> Basic details</div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="medicine-name" class="form-label">Medicine Name <span class="text-danger">*</span></label>
+                        <input id="medicine-name" type="text" name="name" class="form-control"
+                               value="{{ product.name }}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="category" class="form-label">Medicine Category <span class="text-danger">*</span></label>
+                        <select id="category" name="category" class="form-select" required>
+                            <option value="{{ product.category }}" selected>{{ product.category }}</option>
+                            <option value="Tablet">Tablets</option>
+                            <option value="Capsule">Capsules</option>
+                            <option value="Syrup">Syrups</option>
+                            <option value="Injection">Injections</option>
+                            <option value="Ointment">Ointments & Creams</option>
+                            <option value="Drops">Drops</option>
+                            <option value="Medical Devices">Medical Devices</option>
+                            <option value="First Aid">First Aid</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="batch-number" class="form-label">Batch Number</label>
+                        <input id="batch-number" type="text" name="batch_number" class="form-control"
+                               value="{{ product.batch_number or '' }}"
+                               placeholder="Enter batch number">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="supplier" class="form-label">Supplier / Manufacturer</label>
+                        <input id="supplier" type="text" name="supplier" class="form-control"
+                               value="{{ product.supplier or '' }}"
+                               placeholder="Enter supplier name">
+                    </div>
+                </div>
+
+                <hr class="my-4" style="border-color:#e3edf2">
+
+                <div class="section-label"><i class="fas fa-boxes-stacked"></i> Stock & pricing</div>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label for="price" class="form-label">Unit Price (₹) <span class="text-danger">*</span></label>
+                        <input id="price" type="number" step="0.01" min="0" name="price" class="form-control"
+                               value="{{ product.price }}" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="stock" class="form-label">Quantity in Stock <span class="text-danger">*</span></label>
+                        <input id="stock" type="number" min="0" name="stock" class="form-control"
+                               value="{{ product.stock }}" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="expiry-date" class="form-label">Expiry Date</label>
+                        <input id="expiry-date" type="date" name="expiry_date" class="form-control"
+                               value="{{ product.expiry_date.strftime('%Y-%m-%d') if product.expiry_date else '' }}">
+                        <div class="field-hint">Check the expiry printed on the pack.</div>
+                        <div id="expiryWarning" style="display:none;"></div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <label for="description" class="form-label">Description / Notes</label>
+                    <textarea id="description" name="description" rows="3" class="form-control"
+                              placeholder="Optional: strength, pack size, storage notes, or other details">{{ product.description }}</textarea>
+                </div>
+
+                <div class="d-flex flex-wrap justify-content-center gap-2 mt-4 pharmacy-actions">
+                    <a href="{{ url_for('admin_products') }}" class="btn btn-outline-secondary pharmacy-btn me-1">
+                        <i class="fas fa-arrow-left me-1"></i> Back to Inventory
+                    </a>
+                    <button type="submit" class="btn btn-pharmacy pharmacy-btn">
+                        <i class="fas fa-floppy-disk me-1"></i> Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <p class="text-center text-secondary small mt-4 mb-0">
+        <i class="fas fa-heart-pulse me-1"></i> Pharmacy Inventory Management System
+    </p>
+</div>
+
+<script>
+(function () {
+    const expiryInput = document.getElementById('expiry-date');
+    const warningBox = document.getElementById('expiryWarning');
+    if (!expiryInput || !warningBox) return;
+
+    function checkExpiry() {
+        const value = expiryInput.value;
+        warningBox.style.display = 'none';
+        if (!value) return;
+
+        const expiry = new Date(value);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const diffDays = Math.round((expiry - today) / 86400000);
+
+        if (diffDays < 0) {
+            warningBox.style.display = 'block';
+            warningBox.className = 'expiry-warning expiry-warn-danger';
+            warningBox.innerHTML = '<i class="fas fa-ban"></i> This medicine has expired.';
+        } else if (diffDays <= 30) {
+            warningBox.style.display = 'block';
+            warningBox.className = 'expiry-warning expiry-warn-soon';
+            warningBox.innerHTML = '<i class="fas fa-clock"></i> Expires in ' + diffDays + ' day(s).';
+        }
+    }
+
+    expiryInput.addEventListener('change', checkExpiry);
+    checkExpiry();
+})();
+</script>
+{% endblock %}

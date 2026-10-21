@@ -1,0 +1,373 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container py-4">
+
+    <!-- Hero Section -->
+
+    <div class="main-card mb-5">
+
+        <div class="row align-items-center">
+
+            <div class="col-lg-8">
+
+                <h1 class="fw-bold">
+
+                    <i class="fas fa-user-edit"></i>
+                    Edit Profile
+
+                </h1>
+
+                <p class="fs-5 mt-3">
+
+                    Manage your account information,
+                    profile photo and security settings.
+
+                </p>
+
+                <h4>
+                    👤 Account Management Center
+                </h4>
+
+            </div>
+
+            <div class="col-lg-4 text-center">
+
+                {% if current_user.profile_pic %}
+
+                <img src="{{ url_for('static',
+                        filename='uploads/' + current_user.profile_pic) }}"
+                     class="profile-img shadow-lg">
+
+                {% else %}
+
+                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                     class="profile-img shadow-lg">
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Profile Form Card -->
+
+    <div class="card feature-card border-0">
+
+        <div class="card-header text-white"
+             style="background:linear-gradient(135deg,#4338ca,#2563eb);">
+
+            <h4 class="mb-0">
+
+                <i class="fas fa-id-card"></i>
+
+                Update Profile Information
+
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST"
+                  enctype="multipart/form-data">
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label fw-bold">
+
+                            Full Name
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="name"
+                            class="form-control form-control-lg rounded-4"
+                            value="{{ current_user.name }}"
+                            required>
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label fw-bold">
+
+                            Email Address
+
+                        </label>
+
+                        <input
+                            type="email"
+                            name="email"
+                            class="form-control form-control-lg rounded-4"
+                            value="{{ current_user.email }}"
+                            required>
+
+                    </div>
+
+                </div>
+                                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label fw-bold">
+
+                            Mobile Number
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="mobile"
+                            class="form-control form-control-lg rounded-4"
+                            value="{{ current_user.mobile }}">
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label fw-bold">
+
+                            Pincode
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="pincode"
+                            class="form-control form-control-lg rounded-4"
+                            value="{{ current_user.pincode }}">
+
+                    </div>
+
+                </div>
+
+                <div class="mb-4">
+
+                    <label class="form-label fw-bold">
+
+                        Address
+
+                    </label>
+
+                    <textarea
+                        name="address"
+                        rows="4"
+                        class="form-control rounded-4">{{ current_user.address }}</textarea>
+
+                </div>
+
+                <!-- Profile Photo Upload -->
+
+                <div class="card bg-light border-0 mb-4">
+
+                    <div class="card-body text-center">
+
+                        <i class="fas fa-camera fa-3x text-primary mb-3"></i>
+
+                        <h5>Profile Photo</h5>
+
+                        <p class="text-muted">
+                            Upload a new profile picture
+                        </p>
+
+                        <input
+                            type="file"
+                            name="profile_pic"
+                            class="form-control"
+                            accept="image/*">
+
+                    </div>
+
+                </div>
+
+                <!-- Change Password -->
+
+                <h4 class="mb-3 text-primary">
+
+                    <i class="fas fa-lock"></i>
+
+                    Change Password
+
+                </h4>
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label fw-bold">
+
+                            New Password
+
+                        </label>
+
+                        <input
+                            type="password"
+                            name="password"
+                            id="password"
+                            class="form-control form-control-lg rounded-4"
+                            placeholder="Leave blank to keep current password">
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label fw-bold">
+
+                            Confirm Password
+
+                        </label>
+
+                        <input
+                            type="password"
+                            name="confirm_password"
+                            id="confirm_password"
+                            class="form-control form-control-lg rounded-4"
+                            placeholder="Confirm password">
+
+                    </div>
+
+                </div>
+
+                <div class="form-check mb-4">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        onclick="togglePassword()">
+
+                    <label class="form-check-label">
+
+                        Show Password
+
+                    </label>
+
+                </div>
+                                <hr>
+
+                <!-- Action Buttons -->
+
+                <div class="text-center mt-4">
+
+                    <a href="{{ url_for('profile') }}"
+                       class="btn btn-secondary btn-round me-2">
+
+                        <i class="fas fa-arrow-left"></i>
+                        Back
+
+                    </a>
+
+                    <button
+                        type="reset"
+                        class="btn btn-warning btn-round me-2">
+
+                        <i class="fas fa-rotate-left"></i>
+                        Reset
+
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-success btn-round">
+
+                        <i class="fas fa-save"></i>
+                        Save Changes
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- Account Security -->
+
+    <div class="main-card mt-5">
+
+        <h2 class="text-center fw-bold">
+
+            🔒 Account Security
+
+        </h2>
+
+        <p class="text-center fs-5">
+
+            Keep your profile updated and use a strong
+            password to protect your account.
+
+        </p>
+
+        <div class="row text-center mt-4">
+
+            <div class="col-md-4">
+
+                <h1>👤</h1>
+
+                <h5>Profile</h5>
+
+                <p>Manage your personal details</p>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <h1>🔒</h1>
+
+                <h5>Security</h5>
+
+                <p>Keep your account protected</p>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <h1>⚡</h1>
+
+                <h5>Fast Access</h5>
+
+                <p>Quick and secure login</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+function togglePassword(){
+
+    let pass =
+        document.getElementById("password");
+
+    let confirm =
+        document.getElementById("confirm_password");
+
+    if(pass.type === "password"){
+
+        pass.type = "text";
+        confirm.type = "text";
+
+    }else{
+
+        pass.type = "password";
+        confirm.type = "password";
+
+    }
+
+}
+
+</script>
+
+{% endblock %}

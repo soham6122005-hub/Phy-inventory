@@ -1,0 +1,27 @@
+# Environment variables (contains API keys and secrets)
+.env
+
+# Virtual environments
+.venv/
+.venv-1/
+myenv/
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Database files
+*.db
+instance/
+
+# Uploads
+static/uploads/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Separate projects
+python-training/

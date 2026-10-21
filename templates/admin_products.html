@@ -1,0 +1,311 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    :root {
+        --pharmacy-teal: #0f766e;
+        --pharmacy-teal-dark: #115e59;
+        --pharmacy-blue: #2563eb;
+        --pharmacy-ink: #172b4d;
+        --pharmacy-muted: #64748b;
+        --pharmacy-bg: #f3f8fb;
+    }
+
+    .pharmacy-products-page {
+        padding: 26px 0 42px;
+        color: var(--pharmacy-ink);
+    }
+
+    .pharmacy-hero {
+        position: relative;
+        overflow: hidden;
+        padding: 28px 30px;
+        border-radius: 22px;
+        color: #fff;
+        background: linear-gradient(120deg, #0f766e 0%, #0d9488 48%, #2563eb 100%);
+        box-shadow: 0 14px 35px rgba(15, 118, 110, .18);
+        margin-bottom: 24px;
+    }
+
+    .pharmacy-hero::after {
+        content: "+";
+        position: absolute;
+        right: 35px;
+        top: -45px;
+        font-size: 190px;
+        line-height: 1;
+        font-weight: 800;
+        color: rgba(255,255,255,.09);
+        pointer-events: none;
+    }
+
+    .pharmacy-hero h2 { font-weight: 800; letter-spacing: -.5px; margin: 0 0 7px; }
+    .pharmacy-hero p { margin: 0; color: rgba(255,255,255,.86); }
+    .pharmacy-hero-content { position: relative; z-index: 1; }
+
+    .pharmacy-add-btn {
+        border: 0;
+        border-radius: 12px;
+        padding: 11px 17px;
+        font-weight: 700;
+        color: #0f766e !important;
+        background: #fff;
+        box-shadow: 0 5px 14px rgba(0,0,0,.12);
+        white-space: nowrap;
+        transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .pharmacy-add-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(0,0,0,.16); }
+
+    .inventory-summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+    .inventory-stat {
+        background: #fff;
+        border: 1px solid #e5edf3;
+        border-radius: 17px;
+        padding: 19px 21px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        box-shadow: 0 5px 18px rgba(15, 23, 42, .035);
+    }
+    .inventory-stat-icon {
+        width: 48px; height: 48px; border-radius: 14px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 23px; flex-shrink: 0;
+    }
+    .inventory-stat-label { color: var(--pharmacy-muted); font-size: 13px; margin-bottom: 3px; }
+    .inventory-stat-value { font-size: 25px; font-weight: 800; line-height: 1.1; }
+    .stat-teal { background: #ccfbf1; }
+    .stat-blue { background: #dbeafe; }
+    .stat-amber { background: #fef3c7; }
+
+    .inventory-card {
+        border: 1px solid #e5edf3;
+        border-radius: 20px;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 8px 28px rgba(15, 23, 42, .05);
+    }
+    .inventory-card-header {
+        padding: 21px 24px;
+        border-bottom: 1px solid #edf2f7;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+    .inventory-card-header h5 { font-weight: 800; margin: 0 0 4px; }
+    .inventory-card-header p { color: var(--pharmacy-muted); font-size: 13px; margin: 0; }
+    .inventory-search-wrap { position: relative; width: min(100%, 300px); }
+    .inventory-search-wrap span { position: absolute; left: 13px; top: 9px; color: #94a3b8; }
+    .inventory-search {
+        width: 100%; border: 1px solid #dbe5ed; border-radius: 11px;
+        padding: 10px 12px 10px 37px; outline: none; background: #f8fafc;
+    }
+    .inventory-search:focus { border-color: #14b8a6; box-shadow: 0 0 0 3px rgba(20,184,166,.12); }
+
+    .inventory-table { margin: 0; vertical-align: middle; }
+    .inventory-table thead th {
+        background: #f0fdfa;
+        color: #47616d;
+        text-transform: uppercase;
+        font-size: 11px;
+        letter-spacing: .7px;
+        padding: 15px 18px;
+        border-bottom: 1px solid #dceeea;
+        white-space: nowrap;
+    }
+    .inventory-table tbody td { padding: 16px 18px; border-color: #edf2f7; }
+    .inventory-table tbody tr { transition: background .15s ease; }
+    .inventory-table tbody tr:hover { background: #f7fffd; }
+    .product-id { color: #64748b; font-weight: 700; font-size: 12px; }
+    .product-name { font-weight: 750; color: #173b50; }
+    .product-category {
+        display: inline-block; padding: 5px 10px; border-radius: 999px;
+        background: #eff6ff; color: #1d4ed8; font-size: 12px; font-weight: 650;
+    }
+    .product-price { font-weight: 750; color: #0f766e; white-space: nowrap; }
+    .stock-badge { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 6px 10px; font-size: 12px; font-weight: 750; white-space: nowrap; }
+    .stock-good { color: #047857; background: #d1fae5; }
+    .stock-low { color: #b45309; background: #fef3c7; }
+    .stock-out { color: #b91c1c; background: #fee2e2; }
+    .expiry-badge { display: inline-flex; align-items: center; gap: 4px; border-radius: 999px; padding: 5px 10px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+    .expiry-expired { color: #b91c1c; background: #fee2e2; }
+    .expiry-soon { color: #b45309; background: #fef3c7; }
+    .expiry-ok { color: #64748b; background: #f1f5f9; }
+    .product-actions { display: flex; gap: 7px; white-space: nowrap; }
+    .product-actions .btn { border-radius: 9px; font-size: 12px; font-weight: 700; padding: 7px 11px; }
+    .btn-edit-product { color: #1d4ed8; background: #eff6ff; border: 1px solid #dbeafe; }
+    .btn-edit-product:hover { color: #fff; background: #2563eb; }
+    .btn-delete-product { color: #b91c1c; background: #fff1f2; border: 1px solid #ffe4e6; }
+    .btn-delete-product:hover { color: #fff; background: #dc2626; }
+    .inventory-empty { padding: 38px 18px !important; text-align: center; color: #64748b; }
+    .inventory-footer { padding: 14px 22px; background: #fbfdff; border-top: 1px solid #edf2f7; color: #64748b; font-size: 12px; }
+
+    @media (max-width: 767px) {
+        .pharmacy-hero { padding: 23px 20px; }
+        .pharmacy-hero .d-flex { align-items: flex-start !important; flex-direction: column; }
+        .inventory-summary { grid-template-columns: 1fr; gap: 10px; }
+        .inventory-stat { padding: 15px 17px; }
+        .inventory-card-header { padding: 18px; }
+        .inventory-table thead th, .inventory-table tbody td { padding: 13px 12px; }
+    }
+</style>
+
+<div class="container pharmacy-products-page">
+    {% set ns = namespace(low=0, out=0, total_units=0) %}
+    {% for product in products %}
+        {% set ns.total_units = ns.total_units + (product.stock|int) %}
+        {% if product.stock|int <= 0 %}
+            {% set ns.out = ns.out + 1 %}
+        {% elif product.stock|int <= 10 %}
+            {% set ns.low = ns.low + 1 %}
+        {% endif %}
+    {% endfor %}
+
+    <section class="pharmacy-hero">
+        <div class="d-flex justify-content-between align-items-center gap-3">
+            <div class="pharmacy-hero-content">
+                <h2>💊 Pharmacy Inventory</h2>
+                <p>Manage medicines, monitor stock, and keep your inventory organized.</p>
+            </div>
+            <a href="{{ url_for('add_product') }}" class="btn pharmacy-add-btn">＋ Add Medicine</a>
+        </div>
+    </section>
+
+    <section class="inventory-summary" aria-label="Inventory summary">
+        <div class="inventory-stat">
+            <div class="inventory-stat-icon stat-teal">💊</div>
+            <div>
+                <div class="inventory-stat-label">Medicine Products</div>
+                <div class="inventory-stat-value">{{ products|length }}</div>
+            </div>
+        </div>
+        <div class="inventory-stat">
+            <div class="inventory-stat-icon stat-blue">📦</div>
+            <div>
+                <div class="inventory-stat-label">Total Units in Stock</div>
+                <div class="inventory-stat-value">{{ ns.total_units }}</div>
+            </div>
+        </div>
+        <div class="inventory-stat">
+            <div class="inventory-stat-icon stat-amber">⚠️</div>
+            <div>
+                <div class="inventory-stat-label">Low / Out of Stock</div>
+                <div class="inventory-stat-value">{{ ns.low + ns.out }}</div>
+            </div>
+        </div>
+        <div class="inventory-stat">
+            <div class="inventory-stat-icon" style="background:#fee2e2;">🚫</div>
+            <div>
+                <div class="inventory-stat-label">Expired / Expiring</div>
+                <div class="inventory-stat-value">{{ expired_count + expiring_soon_count }}</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="inventory-card">
+        <div class="inventory-card-header">
+            <div>
+                <h5>Medicine Stock List</h5>
+                <p>Review product details and update stock records.</p>
+            </div>
+            <div class="inventory-search-wrap">
+                <span aria-hidden="true">⌕</span>
+                <input id="medicineSearch" class="inventory-search" type="search" placeholder="Search medicines..." aria-label="Search medicines">
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table inventory-table" id="medicineTable">
+                <thead>
+                    <tr>
+                        <th>Item ID</th>
+                        <th>Medicine / Product</th>
+                        <th>Category</th>
+                        <th>Unit Price</th>
+                        <th>Available Stock</th>
+                        <th>Expiry Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr class="medicine-row">
+                        <td><span class="product-id">#{{ product.id }}</span></td>
+                        <td><div class="product-name">{{ product.name }}</div></td>
+                        <td><span class="product-category">{{ product.category }}</span></td>
+                        <td><span class="product-price">₹{{ '%.2f'|format(product.price|float) }}</span></td>
+                        <td>
+                            {% if product.stock|int <= 0 %}
+                                <span class="stock-badge stock-out">● Out of stock</span>
+                            {% elif product.stock|int <= 10 %}
+                                <span class="stock-badge stock-low">● Low · {{ product.stock }} units</span>
+                            {% else %}
+                                <span class="stock-badge stock-good">● {{ product.stock }} units</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if product.expiry_date %}
+                                {% if product.expiry_date < today %}
+                                    <span class="expiry-badge expiry-expired">● Expired · {{ product.expiry_date.strftime('%d %b %y') }}</span>
+                                {% elif product.expiry_date <= expiry_threshold %}
+                                    <span class="expiry-badge expiry-soon">● Soon · {{ product.expiry_date.strftime('%d %b %y') }}</span>
+                                {% else %}
+                                    <span class="expiry-badge expiry-ok">{{ product.expiry_date.strftime('%d %b %y') }}</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="text-muted">—</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="product-actions">
+                                <a href="{{ url_for('edit_product', id=product.id) }}" class="btn btn-edit-product">✎ Edit</a>
+                                <a href="{{ url_for('delete_product', id=product.id) }}" class="btn btn-delete-product" onclick="return confirm('Are you sure you want to delete this medicine?')">⌫ Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="7" class="inventory-empty">
+                            <div style="font-size: 32px; margin-bottom: 8px;">💊</div>
+                            <strong>No medicines added yet</strong>
+                            <div class="mt-1">Use "Add Medicine" to create your first inventory record.</div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    <tr id="noSearchResults" style="display: none;">
+                        <td colspan="7" class="inventory-empty">No medicines match your search.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="inventory-footer">Inventory overview · Stock alerts appear for 10 units or fewer · Expiry badges highlight expired and soon-to-expire medicines.</div>
+    </section>
+</div>
+
+<script>
+    (function () {
+        const searchInput = document.getElementById('medicineSearch');
+        const rows = Array.from(document.querySelectorAll('#medicineTable .medicine-row'));
+        const noResults = document.getElementById('noSearchResults');
+        if (!searchInput) return;
+
+        searchInput.addEventListener('input', function () {
+            const query = this.value.trim().toLowerCase();
+            let visibleCount = 0;
+            rows.forEach(function (row) {
+                const matches = row.textContent.toLowerCase().includes(query);
+                row.style.display = matches ? '' : 'none';
+                if (matches) visibleCount++;
+            });
+            if (noResults) noResults.style.display = (rows.length > 0 && visibleCount === 0) ? '' : 'none';
+        });
+    })();
+</script>
+{% endblock %}

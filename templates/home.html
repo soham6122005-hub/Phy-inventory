@@ -1,0 +1,646 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+
+body{
+    background:linear-gradient(135deg,#eaf7f4 0%,#f3f8ff 55%,#e8f4ff 100%);
+    min-height:100vh;
+}
+
+/* Dashboard */
+
+.dashboard-container{
+    padding:30px 0;
+}
+
+/* Glass Effect */
+
+.glass-card{
+    background:rgba(255,255,255,0.88);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    border:1px solid rgba(15,118,110,0.12);
+    border-radius:25px;
+    box-shadow:0 12px 32px rgba(15,76,76,.10);
+}
+
+/* Hero */
+
+.hero-banner{
+    padding:40px;
+    color:white;
+    background:linear-gradient(125deg,#0f766e,#164e63 65%,#2563eb);
+    overflow:hidden;
+    position:relative;
+}
+
+.hero-banner::before{
+    content:'';
+    position:absolute;
+    width:300px;
+    height:300px;
+    background:rgba(255,255,255,.16);
+    border-radius:50%;
+    top:-120px;
+    right:-80px;
+}
+
+.hero-banner h1{
+    font-size:3rem;
+    font-weight:800;
+}
+
+.hero-banner p{
+    opacity:.95;
+    font-size:1.1rem;
+}
+
+.profile-image{
+    width:180px;
+    height:180px;
+    border-radius:50%;
+    object-fit:cover;
+    border:5px solid rgba(255,255,255,.75);
+    box-shadow:0 10px 30px rgba(15,76,76,.16);
+}
+
+/* Stats */
+
+.stats-card{
+    border:none;
+    border-radius:22px;
+    color:white;
+    overflow:hidden;
+    transition:.35s;
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+.stats-card:hover{
+    transform:translateY(-8px);
+}
+
+.stats-card .card-body{
+    padding:28px;
+}
+
+.stats-icon{
+    font-size:3rem;
+    opacity:.85;
+}
+
+.products-bg{
+    background:linear-gradient(135deg,#0f766e,#14b8a6);
+}
+
+.users-bg{
+    background:linear-gradient(135deg,#2563eb,#60a5fa);
+}
+
+.orders-bg{
+    background:linear-gradient(135deg,#d97706,#fbbf24);
+}
+
+.stock-bg{
+    background:linear-gradient(135deg,#dc4545,#fb7185);
+}
+
+/* Buttons */
+
+.quick-btn{
+    border:none;
+    border-radius:50px;
+    padding:12px 25px;
+    font-weight:700;
+    text-decoration:none;
+    color:white;
+    margin:5px;
+    display:inline-block;
+    transition:.3s;
+}
+
+.quick-btn:hover{
+    transform:translateY(-4px);
+    color:white;
+}
+
+.btn-products{
+    background:#0f766e;
+}
+
+.btn-orders{
+    background:#d97706;
+}
+
+.btn-profile{
+    background:#2563eb;
+}
+
+.btn-ai{
+    background:#64748b;
+}
+
+/* Section */
+
+.section-title{
+    font-weight:800;
+    color:#173b45;
+    margin-top:40px;
+    margin-bottom:20px;
+}
+
+/* Product Card */
+
+.product-card{
+    border:none;
+    border-radius:22px;
+    overflow:hidden;
+    transition:.35s;
+}
+
+.product-card:hover{
+    transform:translateY(-8px);
+}
+
+.product-image{
+    height:220px;
+    object-fit:cover;
+}
+
+.price-tag{
+    color:#0f766e;
+    font-size:1.3rem;
+    font-weight:800;
+}
+
+/* Table */
+
+.table-card{
+    border-radius:25px;
+    overflow:hidden;
+}
+
+.table thead{
+    background:#0f766e;
+    color:#173b45;
+}
+
+/* Low Stock Medicines */
+
+.low-stock-card{
+    border-left:5px solid #dc2626;
+}
+
+/* Responsive */
+
+@media(max-width:768px){
+
+    .hero-banner{
+        text-align:center;
+    }
+
+    .hero-banner h1{
+        font-size:2rem;
+    }
+
+    .profile-image{
+        width:140px;
+        height:140px;
+        margin-top:20px;
+    }
+
+}
+
+</style>
+
+<div class="container dashboard-container">
+
+    <!-- HERO -->
+
+    <div class="glass-card hero-banner">
+
+        <div class="row align-items-center">
+
+            <div class="col-lg-8">
+
+                <h1>
+                    <i class="fas fa-prescription-bottle-medical"></i>
+                    Pharmacy Inventory
+                </h1>
+
+                <p class="mt-3">
+                    Smart Pharmacy Inventory Management System
+                    for Medicines, Stock, Orders and Customers
+                    and AI Assistance.
+                </p>
+
+                <h3 class="mt-4">
+                    👋 Welcome,
+                    {% if current_user.is_authenticated %}
+                        {{ current_user.name }}
+                    {% else %}
+                        Guest
+                    {% endif %}
+                </h3>
+
+                <div class="mt-4">
+
+                    <a href="{{ url_for('products') }}"
+                       class="quick-btn btn-products">
+                        📦 Medicines
+                    </a>
+
+                    <a href="{{ url_for('orders') }}"
+                       class="quick-btn btn-orders">
+                        🧾 Orders
+                    </a>
+
+                    <a href="{{ url_for('profile') }}"
+                       class="quick-btn btn-profile">
+                        👤 Profile
+                    </a>
+
+                    <a href="{{ url_for('ai_chat') }}"
+                       class="quick-btn btn-ai">
+                        🤖 Pharmacy Assistant
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-4 text-center">
+
+                {% if current_user.is_authenticated and current_user.profile_pic %}
+
+                <img
+                src="{{ url_for('static', filename='uploads/' + current_user.profile_pic) }}"
+                class="profile-image">
+
+                {% else %}
+
+                <img
+                src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                class="profile-image">
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- STATS ROW -->
+
+    <div class="row mt-5 g-4">
+
+        <div class="col-md-3">
+
+            <div class="stats-card products-bg">
+
+                <div class="card-body">
+
+                    <i class="fas fa-box-open stats-icon"></i>
+
+                    <h5 class="mt-3">
+                        Total Medicines
+                    </h5>
+
+                    <h1>
+                        {{ total_products }}
+                    </h1>
+
+                </div>
+
+            </div>
+
+        </div>
+                <div class="col-md-3">
+
+            <div class="stats-card users-bg">
+
+                <div class="card-body">
+
+                    <i class="fas fa-users stats-icon"></i>
+
+                    <h5 class="mt-3">
+                        Total Users
+                    </h5>
+
+                    <h1>
+                        {{ total_users }}
+                    </h1>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="stats-card orders-bg">
+
+                <div class="card-body">
+
+                    <i class="fas fa-shopping-cart stats-icon"></i>
+
+                    <h5 class="mt-3">
+                        Total Orders
+                    </h5>
+
+                    <h1>
+                        {{ total_orders }}
+                    </h1>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="stats-card stock-bg">
+
+                <div class="card-body">
+
+                    <i class="fas fa-exclamation-triangle stats-icon"></i>
+
+                    <h5 class="mt-3">
+                        Low Stock Medicines
+                    </h5>
+
+                    <h1>
+                        {{ low_stock }}
+                    </h1>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- RECENT ORDERS -->
+
+    <h2 class="section-title">
+        🛒 Recent Medicine Orders
+    </h2>
+
+    <div class="glass-card table-card p-4">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Product</th>
+
+                        <th>Price</th>
+
+                        <th>Qty</th>
+
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for order in recent_orders %}
+
+                    <tr>
+
+                        <td>
+                            #{{ order.id }}
+                        </td>
+
+                        <td>
+                            {{ order.product_name }}
+                        </td>
+
+                        <td>
+                            ₹{{ order.price }}
+                        </td>
+
+                        <td>
+                            {{ order.quantity }}
+                        </td>
+
+                        <td>
+
+                            {% if order.status == 'Completed' %}
+
+                            <span class="badge bg-success">
+                                {{ order.status }}
+                            </span>
+
+                            {% elif order.status == 'Cancelled' %}
+
+                            <span class="badge bg-danger">
+                                {{ order.status }}
+                            </span>
+
+                            {% else %}
+
+                            <span class="badge bg-warning text-dark">
+                                {{ order.status }}
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% else %}
+
+                    <tr>
+
+                        <td colspan="5" class="text-center">
+
+                            No Orders Found
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+        <!-- LOW STOCK PRODUCTS -->
+
+    <h2 class="section-title">
+        ⚠️ Low Stock Medicines Alerts
+    </h2>
+
+    <div class="row g-4">
+
+        {% for product in low_stock_products %}
+
+        <div class="col-md-4">
+
+            <div class="card low-stock-card shadow border-0 h-100">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold text-danger">
+                        {{ product.name }}
+                    </h5>
+
+                    <p class="mb-2">
+                        Category:
+                        <strong>
+                            {{ product.category }}
+                        </strong>
+                    </p>
+
+                    <p class="mb-2">
+                        Remaining Stock:
+                        <span class="badge bg-danger">
+                            {{ product.stock }}
+                        </span>
+                    </p>
+
+                    <p class="text-muted mb-0">
+                        {{ product.description }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% else %}
+
+        <div class="col-12">
+
+            <div class="alert alert-success text-center shadow">
+
+                🎉 Great! No products are currently low in stock.
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    <!-- WHY CHOOSE US -->
+
+    <h2 class="section-title">
+        🚀 Why Choose Pharmacy Inventory?
+    </h2>
+
+    <div class="glass-card p-5 text-center text-white mt-4">
+
+        <div class="row">
+
+            <div class="col-md-3 mb-4">
+
+                <h1>
+                    📦
+                </h1>
+
+                <h5>
+                    Medicine Inventory
+                </h5>
+
+                <p>
+                    Track medicine batches and stock levels easily.
+                </p>
+
+            </div>
+
+            <div class="col-md-3 mb-4">
+
+                <h1>
+                    🛒
+                </h1>
+
+                <h5>
+                    Order Management
+                </h5>
+
+                <p>
+                    Manage medicine orders with clear status updates.
+                </p>
+
+            </div>
+
+            <div class="col-md-3 mb-4">
+
+                <h1>
+                    👥
+                </h1>
+
+                <h5>
+                    Customer Records
+                </h5>
+
+                <p>
+                    Keep pharmacy customer records organized.
+                </p>
+
+            </div>
+
+            <div class="col-md-3 mb-4">
+
+                <h1>
+                    🤖
+                </h1>
+
+                <h5>
+                    Pharmacy Assistant
+                </h5>
+
+                <p>
+                    Get quick assistance with inventory tasks.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+
+    <div class="text-center text-white mt-5 mb-3">
+
+        <h5 class="fw-bold">
+            Pharmacy Inventory System
+        </h5>
+
+        <p>
+            Manage Medicines • Stock • Orders • Customers
+        </p>
+
+        <small>
+            © 2026 Pharmacy Inventory System
+        </small>
+
+    </div>
+
+</div>
+
+{% endblock %}

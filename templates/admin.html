@@ -1,0 +1,533 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .pharmacy-page {
+        --pharmacy-teal: #087f8c;
+        --pharmacy-deep: #123b50;
+        --pharmacy-mint: #e9f8f5;
+        --pharmacy-coral: #ffb36b;
+        padding: 1.5rem 0 2.5rem;
+    }
+    .pharmacy-page .page-banner {
+        background: linear-gradient(125deg, #123b50 0%, #087f8c 68%, #21a6a0 100%);
+        border-radius: 20px;
+        padding: 1.6rem 1.8rem;
+        color: #fff;
+        box-shadow: 0 12px 28px rgba(8, 127, 140, .18);
+        position: relative;
+        overflow: hidden;
+    }
+    .pharmacy-page .page-banner:after {
+        content: "✚";
+        position: absolute;
+        right: 2rem;
+        top: -1.5rem;
+        font-size: 8rem;
+        color: rgba(255,255,255,.09);
+        font-weight: 800;
+        pointer-events: none;
+    }
+    .pharmacy-page .eyebrow {
+        text-transform: uppercase;
+        letter-spacing: .14em;
+        font-size: .72rem;
+        font-weight: 700;
+        color: #baf3e9;
+    }
+    .pharmacy-page .users-count {
+        display: inline-flex;
+        align-items: center;
+        gap: .55rem;
+        background: rgba(255,255,255,.15);
+        border: 1px solid rgba(255,255,255,.24);
+        border-radius: 14px;
+        padding: .75rem 1rem;
+        position: relative;
+        z-index: 1;
+    }
+    .pharmacy-page .users-count strong { font-size: 1.45rem; line-height: 1; }
+    .pharmacy-page .panel {
+        border: 1px solid #e4eeee;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(18,59,80,.07);
+        background: #fff;
+    }
+    .pharmacy-page .panel-heading {
+        padding: 1.15rem 1.4rem;
+        background: #f1fbf9;
+        border-bottom: 1px solid #e1f1ee;
+    }
+    .pharmacy-page .panel-heading h4 {
+        color: #123b50;
+        font-size: 1.08rem;
+        font-weight: 750;
+        margin: 0;
+    }
+    .pharmacy-page .section-icon {
+        display: inline-grid;
+        place-items: center;
+        width: 42px;
+        height: 42px;
+        border-radius: 13px;
+        color: #087f8c;
+        background: #d9f4ee;
+        font-size: 1.15rem;
+        margin-right: .75rem;
+    }
+    .pharmacy-page .search-wrap { position: relative; }
+    .pharmacy-page .search-wrap .search-icon {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #66828d;
+    }
+    .pharmacy-page #userSearch {
+        min-height: 46px;
+        padding-left: 2.65rem;
+        border-radius: 12px;
+        border: 1px solid #d8e7e9;
+        background: #fbfefe;
+    }
+    .pharmacy-page #userSearch:focus {
+        border-color: #0d9a9a;
+        box-shadow: 0 0 0 .2rem rgba(13,154,154,.12);
+    }
+    .pharmacy-page .table { margin-bottom: 0; }
+    .pharmacy-page .table thead th {
+        background: #173f53;
+        color: #fff;
+        border-color: #285569;
+        font-size: .78rem;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        padding: 1rem .85rem;
+        white-space: nowrap;
+    }
+    .pharmacy-page .table tbody td {
+        padding: .95rem .85rem;
+        border-color: #edf2f3;
+        color: #34515d;
+        vertical-align: middle;
+    }
+    .pharmacy-page .table tbody tr:hover { background: #f2fbf9; }
+    .pharmacy-page .user-avatar {
+        display: inline-grid;
+        place-items: center;
+        width: 35px;
+        height: 35px;
+        border-radius: 11px;
+        background: #e1f5f1;
+        color: #087f8c;
+        margin-right: .55rem;
+    }
+    .pharmacy-page .role-admin {
+        color: #9d3a24;
+        background: #fff0e8;
+        border: 1px solid #ffd9c7;
+        border-radius: 30px;
+        padding: .4rem .65rem;
+        font-weight: 700;
+    }
+    .pharmacy-page .role-user {
+        color: #14734e;
+        background: #e7f8ef;
+        border: 1px solid #c8eed9;
+        border-radius: 30px;
+        padding: .4rem .65rem;
+        font-weight: 700;
+    }
+    .pharmacy-page .delete-btn {
+        border: 0;
+        border-radius: 9px;
+        background: #fff0ed;
+        color: #b83d35;
+        font-weight: 650;
+        padding: .45rem .7rem;
+    }
+    .pharmacy-page .delete-btn:hover { background: #b83d35; color: #fff; }
+    .pharmacy-page .protected-label {
+        color: #6b838b;
+        background: #f0f5f6;
+        border-radius: 8px;
+        padding: .4rem .6rem;
+        font-size: .85rem;
+    }
+    .pharmacy-page .empty-state { padding: 2.4rem 1rem !important; color: #718891 !important; }
+
+    /* Inventory alerts panel */
+    .pharmacy-page .alerts-panel {
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(18,59,80,.07);
+    }
+    .pharmacy-page .alerts-header {
+        background: linear-gradient(125deg, #b91c1c 0%, #d97706 100%);
+        color: #fff;
+        padding: 1.15rem 1.4rem;
+        display: flex;
+        align-items: center;
+        gap: .8rem;
+    }
+    .pharmacy-page .alerts-header h4 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 800;
+    }
+    .pharmacy-page .alerts-header p {
+        margin: 0 0 0 .5rem;
+        font-size: .82rem;
+        opacity: .9;
+    }
+    .pharmacy-page .alerts-badge {
+        display: inline-grid;
+        place-items: center;
+        min-width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        background: rgba(255,255,255,.25);
+        border: 1px solid rgba(255,255,255,.35);
+        font-size: 1.2rem;
+        font-weight: 800;
+    }
+    .pharmacy-page .alerts-body {
+        background: #fff;
+        padding: 1.2rem 1.4rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 1.1rem;
+    }
+    .pharmacy-page .alert-group {
+        border-radius: 14px;
+        padding: 1rem 1.1rem;
+    }
+    .pharmacy-page .alert-expired {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+    }
+    .pharmacy-page .alert-expiring {
+        background: #fffbeb;
+        border: 1px solid #fde68a;
+    }
+    .pharmacy-page .alert-outofstock {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+    }
+    .pharmacy-page .alert-group-title {
+        font-weight: 800;
+        font-size: .9rem;
+        margin-bottom: .65rem;
+        display: flex;
+        align-items: center;
+        gap: .45rem;
+    }
+    .pharmacy-page .alert-expired .alert-group-title { color: #991b1b; }
+    .pharmacy-page .alert-expiring .alert-group-title { color: #92400e; }
+    .pharmacy-page .alert-outofstock .alert-group-title { color: #991b1b; }
+    .pharmacy-page .alert-item {
+        padding: .5rem .1rem;
+        border-top: 1px solid rgba(0,0,0,.06);
+        font-size: .85rem;
+    }
+    .pharmacy-page .alert-item:first-of-type { border-top: 0; }
+    .pharmacy-page .alert-detail {
+        display: block;
+        font-size: .78rem;
+        color: #6b7280;
+        margin-top: .15rem;
+    }
+
+    /* Quick stats row */
+    .pharmacy-page .quick-stat {
+        display: flex;
+        align-items: center;
+        gap: .85rem;
+        background: #fff;
+        border: 1px solid #e4eeee;
+        border-radius: 16px;
+        padding: 1rem 1.2rem;
+        box-shadow: 0 6px 20px rgba(18,59,80,.05);
+    }
+    .pharmacy-page .quick-stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        display: grid;
+        place-items: center;
+        font-size: 1.35rem;
+        flex-shrink: 0;
+    }
+    .pharmacy-page .quick-stat-label { font-size: .78rem; color: #64748b; }
+    .pharmacy-page .quick-stat-value { font-size: 1.5rem; font-weight: 800; color: #173f53; line-height: 1.1; }
+
+    /* Quick admin links */
+    .pharmacy-page .admin-links {
+        display: flex;
+        gap: .5rem;
+        flex-wrap: wrap;
+    }
+    .pharmacy-page .admin-link {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        padding: .5rem .9rem;
+        border-radius: 11px;
+        background: #f0fdfa;
+        border: 1px solid #d2f0ea;
+        color: #087f8c;
+        font-weight: 700;
+        font-size: .85rem;
+        text-decoration: none;
+        transition: background .15s, color .15s;
+    }
+    .pharmacy-page .admin-link:hover {
+        background: #087f8c;
+        color: #fff;
+    }
+
+    @media (max-width: 767px) {
+        .pharmacy-page .page-banner { padding: 1.25rem; }
+        .pharmacy-page .page-banner:after { right: .5rem; font-size: 5rem; }
+        .pharmacy-page .page-banner h2 { font-size: 1.45rem; }
+        .pharmacy-page .users-count { margin-top: 1rem; }
+    }
+</style>
+
+<div class="container pharmacy-page">
+    <div class="page-banner mb-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+            <div>
+                <div class="eyebrow mb-2">Pharmacy Inventory Management</div>
+                <h2 class="fw-bold mb-2"><i class="fas fa-user-shield me-2"></i>User Management</h2>
+                <p class="mb-0" style="color:#d7f4f0;">Manage pharmacy system accounts and administrator access.</p>
+            </div>
+            <div class="users-count mt-3 mt-md-0">
+                <i class="fas fa-users fa-lg"></i>
+                <div><strong>{{ users|length }}</strong><div class="small">Registered users</div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inventory Alerts -->
+    {% if expired_products or expiring_soon_products or out_of_stock_products %}
+    <div class="alerts-panel mb-4">
+        <div class="alerts-header">
+            <span class="alerts-badge">{{ alert_count }}</span>
+            <h4><i class="fas fa-bell"></i> Inventory Notifications</h4>
+            <p class="d-none d-md-block">Items that need your attention right now.</p>
+        </div>
+        <div class="alerts-body">
+            {% if expired_products %}
+            <div class="alert-group alert-expired">
+                <div class="alert-group-title">
+                    <i class="fas fa-ban"></i> Expired Medicines ({{ expired_products|length }})
+                </div>
+                {% for product in expired_products %}
+                <div class="alert-item">
+                    <strong>{{ product.name }}</strong>
+                    <span class="alert-detail">
+                        Expired on {{ product.expiry_date.strftime('%d %b %Y') }}
+                        {% if product.stock|int <= 0 %} · Out of stock{% endif %}
+                    </span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if expiring_soon_products %}
+            <div class="alert-group alert-expiring">
+                <div class="alert-group-title">
+                    <i class="fas fa-clock"></i> Expiring Within 30 Days ({{ expiring_soon_products|length }})
+                </div>
+                {% for product in expiring_soon_products %}
+                <div class="alert-item">
+                    <strong>{{ product.name }}</strong>
+                    <span class="alert-detail">
+                        Expires on {{ product.expiry_date.strftime('%d %b %Y') }} · Stock: {{ product.stock }}
+                    </span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if out_of_stock_products %}
+            <div class="alert-group alert-outofstock">
+                <div class="alert-group-title">
+                    <i class="fas fa-box-open"></i> Out of Stock ({{ out_of_stock_products|length }})
+                </div>
+                {% for product in out_of_stock_products %}
+                <div class="alert-item">
+                    <strong>{{ product.name }}</strong>
+                    <span class="alert-detail">
+                        Stock: 0 units
+                        {% if product.expiry_date %} · Expires {{ product.expiry_date.strftime('%d %b %Y') }}{% endif %}
+                    </span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-success mb-4" style="border-radius:14px;">
+        <i class="fas fa-circle-check me-1"></i> All good! No expired, expiring, or out-of-stock medicines.
+    </div>
+    {% endif %}
+
+    <!-- Quick Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3 col-6">
+            <div class="quick-stat">
+                <div class="quick-stat-icon" style="background:#ccfbf1;color:#0f766e;"><i class="fas fa-pills"></i></div>
+                <div>
+                    <div class="quick-stat-label">Total Medicines</div>
+                    <div class="quick-stat-value">{{ total_products }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="quick-stat">
+                <div class="quick-stat-icon" style="background:#dbeafe;color:#2563eb;"><i class="fas fa-shopping-bag"></i></div>
+                <div>
+                    <div class="quick-stat-label">Total Orders</div>
+                    <div class="quick-stat-value">{{ total_orders }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="quick-stat">
+                <div class="quick-stat-icon" style="background:#d1fae5;color:#047857;"><i class="fas fa-indian-rupee-sign"></i></div>
+                <div>
+                    <div class="quick-stat-label">Total Sales</div>
+                    <div class="quick-stat-value">₹{{ "%.0f"|format(total_sales|float) }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="quick-stat">
+                <div class="quick-stat-icon" style="background:#fef3c7;color:#b45309;"><i class="fas fa-users"></i></div>
+                <div>
+                    <div class="quick-stat-label">Registered Users</div>
+                    <div class="quick-stat-value">{{ total_users }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Admin Links -->
+    <div class="admin-links mb-4">
+        <a href="{{ url_for('admin_products') }}" class="admin-link"><i class="fas fa-boxes-stacked"></i> Manage Inventory</a>
+        <a href="{{ url_for('admin_orders') }}" class="admin-link"><i class="fas fa-clipboard-list"></i> View Orders</a>
+        <a href="{{ url_for('add_product') }}" class="admin-link"><i class="fas fa-plus-circle"></i> Add Medicine</a>
+    </div>
+
+    <div class="panel">
+        <div class="panel-heading d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div class="d-flex align-items-center">
+                <span class="section-icon"><i class="fas fa-users"></i></span>
+                <div>
+                    <h4>Registered Accounts</h4>
+                    <small class="text-muted">Review user details and account roles</small>
+                </div>
+            </div>
+            <span class="small fw-semibold" style="color:#087f8c;"><i class="fas fa-shield-alt me-1"></i>Secure admin area</span>
+        </div>
+
+        <div class="p-3 p-md-4">
+            <div class="search-wrap mb-3">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="userSearch" class="form-control"
+                       placeholder="Search by name, email, mobile, pincode or role..."
+                       aria-label="Search registered users">
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle" id="userTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>User</th>
+                            <th>Email</th>
+                            <th>Mobile</th>
+                            <th>Pincode</th>
+                            <th>Role</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td class="fw-semibold">#{{ user.id }}</td>
+                            <td>
+                                <span class="user-avatar"><i class="fas fa-user"></i></span>
+                                <span class="fw-semibold">{{ user.name }}</span>
+                            </td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.mobile }}</td>
+                            <td>{{ user.pincode }}</td>
+                            <td>
+                                {% if user.is_admin %}
+                                    <span class="role-admin"><i class="fas fa-user-shield me-1"></i>Admin</span>
+                                {% else %}
+                                    <span class="role-user"><i class="fas fa-user me-1"></i>User</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if not user.is_admin %}
+                                    <a href="{{ url_for('delete_user', id=user.id) }}"
+                                       class="btn btn-sm delete-btn"
+                                       onclick="return confirm('Are you sure you want to delete this user?')">
+                                        <i class="fas fa-trash-alt me-1"></i>Delete
+                                    </a>
+                                {% else %}
+                                    <span class="protected-label"><i class="fas fa-lock me-1"></i>Protected</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="7" class="text-center empty-state">
+                                <i class="fas fa-user-friends fa-2x mb-2 d-block"></i>
+                                <strong>No users found</strong>
+                                <div class="small">Registered accounts will appear here.</div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div id="noSearchResults" class="text-center text-muted py-4" style="display:none;">
+                <i class="fas fa-search me-1"></i>No accounts match your search.
+            </div>
+        </div>
+    </div>
+    <div class="text-center text-muted small mt-3">
+        <i class="fas fa-heartbeat me-1" style="color:#0b9995;"></i>Pharmacy Inventory Management System
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("userSearch");
+    const table = document.getElementById("userTable");
+    const rows = Array.from(table.querySelectorAll("tbody tr"));
+    const noResults = document.getElementById("noSearchResults");
+
+    searchInput.addEventListener("input", function () {
+        const query = this.value.trim().toLowerCase();
+        let visibleCount = 0;
+
+        rows.forEach(function (row) {
+            const isDataRow = row.cells.length === 7;
+            const matches = isDataRow && row.innerText.toLowerCase().includes(query);
+            row.style.display = (!query && !isDataRow) || matches ? "" : "none";
+            if (matches) visibleCount++;
+        });
+
+        noResults.style.display = query && visibleCount === 0 ? "block" : "none";
+    });
+});
+</script>
+{% endblock %}

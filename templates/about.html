@@ -1,0 +1,1046 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+
+.about-hero{
+
+    background:linear-gradient(135deg,#064e3b 0%,#0f766e 52%,#14b8a6 100%);
+
+    border-radius:30px;
+
+    padding:60px;
+
+    color:#ffffff;
+
+    overflow:hidden;
+
+    position:relative;
+
+    box-shadow:0 15px 40px hsla(0, 0%, 0%, 0.18);
+
+}
+
+.about-hero::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:350px;
+    height:350px;
+
+    right:-80px;
+    top:-100px;
+
+    background:hsla(0, 0%, 0%, 0.18);
+
+    border-radius:50%;
+
+}
+
+.about-hero::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:150px;
+    height:150px;
+
+    right:90px;
+    bottom:40px;
+
+    border:4px solid rgba(255,255,255,.35);
+
+    border-radius:50%;
+
+}
+
+.hero-title{
+
+    font-size:3rem;
+
+    font-weight:800;
+
+}
+
+.hero-text{
+
+    font-size:18px;
+
+    opacity:.95;
+
+    line-height:1.8;
+
+}
+
+.stats-card{
+
+    background:hsla(0, 0%, 0%, 0.18);
+
+    border:1px solid rgba(255,255,255,.15);
+
+    backdrop-filter:blur(12px);
+
+    border-radius:22px;
+
+    padding:25px;
+
+    transition:.35s;
+
+}
+
+.stats-card:hover{
+
+    transform:translateY(-8px);
+
+    background:rgba(255,255,255,.18);
+
+}
+
+.stats-icon{
+
+    width:70px;
+
+    height:70px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:28px;
+
+    color:#ffffff;
+
+    margin:auto;
+
+    margin-bottom:15px;
+
+}
+
+.blue{
+
+    background:linear-gradient(135deg,#2563eb,#60a5fa);
+
+}
+
+.red{
+
+    background:linear-gradient(135deg,#059669,#34d399);
+
+}
+
+.green{
+
+    background:linear-gradient(135deg,#d97706,#fbbf24);
+
+}
+
+.yellow{
+
+    background:linear-gradient(135deg,#7c3aed,#c084fc);
+
+}
+
+.about-image{
+
+    width:100%;
+
+    border-radius:25px;
+
+}
+
+.section-title{
+
+    font-size:2rem;
+
+    font-weight:800;
+
+    color:#ffffff;
+
+}
+
+
+/* Pharmacy-themed visual refresh */
+.about-hero {
+    background: linear-gradient(135deg, #064e3b 0%, #0f766e 52%, #14b8a6 100%);
+    color: #fff;
+}
+.about-hero .hero-title,
+.about-hero .hero-text,
+.about-hero .stats-card h2,
+.about-hero .stats-card p {
+    color: #fff;
+}
+.section-card, .feature-card, .main-card {
+    border: 1px solid rgba(15, 118, 110, 0.12);
+    border-radius: 22px;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.07);
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+.section-card:hover, .feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 36px rgba(15, 118, 110, 0.13);
+}
+.section-title { color: #0f766e; }
+.feature-card h4, .section-card h2 { color: #0f3d36; }
+.stats-icon { box-shadow: 0 8px 18px rgba(15, 23, 42, .12); }
+.main-card {
+    background: linear-gradient(135deg, #0f766e, #064e3b);
+    color: #fff;
+    padding: 3rem;
+    border-radius: 28px;
+}
+.main-card p, .main-card h2, .main-card i { color: #fff; }
+.btn-primary { background-color: #0f766e; border-color: #0f766e; }
+.btn-primary:hover { background-color: #115e59; border-color: #115e59; }
+
+</style>
+
+<div class="container mt-4">
+
+<div class="about-hero">
+
+<div class="row align-items-center">
+
+<div class="col-lg-6">
+
+<h1 class="hero-title">
+
+<i class="fas fa-prescription-bottle-medical me-3"></i>
+
+About Pharmacy Inventory Management System
+
+</h1>
+
+<p class="hero-text mt-4">
+
+Pharmacy Inventory Management System is a modern inventory management platform
+designed to help pharmacies manage medications, customers,
+orders and stock efficiently.
+
+The system also provides AI assistance,
+analytics and smart dashboard reports for better decision making.
+
+</p>
+
+<div class="row mt-5">
+
+<div class="col-md-3 col-6 mb-3">
+
+<div class="stats-card text-center">
+
+<div class="stats-icon blue">
+
+<i class="fas fa-box-open"></i>
+
+</div>
+
+<h2>120+</h2>
+
+<p>Products</p>
+
+</div>
+
+</div>
+
+<div class="col-md-3 col-6 mb-3">
+
+<div class="stats-card text-center">
+
+<div class="stats-icon green">
+
+<i class="fas fa-users"></i>
+
+</div>
+
+<h2>500+</h2>
+
+<p>Customers</p>
+
+</div>
+
+</div>
+
+<div class="col-md-3 col-6 mb-3">
+
+<div class="stats-card text-center">
+
+<div class="stats-icon orange">
+
+<i class="fas fa-cart-shopping"></i>
+
+</div>
+
+<h2>1500+</h2>
+
+<p>Orders</p>
+
+</div>
+
+</div>
+
+<div class="col-md-3 col-6 mb-3">
+
+<div class="stats-card text-center">
+
+<div class="stats-icon purple">
+
+<i class="fas fa-star"></i>
+
+</div>
+
+<h2>100%</h2>
+
+<p>Reliable</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg-6 text-center">
+
+<img src="https://cdn-icons-png.flaticon.com/512/6295/6295417.png"
+     class="about-image">
+
+</div>
+
+</div>
+
+</div>
+<!-- ===========================
+      MISSION & VISION
+=========================== -->
+
+<div class="row mt-5">
+
+    <div class="col-lg-6 mb-4">
+
+        <div class="section-card h-100 p-5 text-center">
+
+            <div class="stats-icon blue mb-4">
+
+                <i class="fas fa-bullseye"></i>
+
+            </div>
+
+            <h2 class="fw-bold mb-3">
+
+                Our Mission
+
+            </h2>
+
+            <p class="text-muted">
+
+                Our mission is to provide businesses with a
+                smart, secure and easy-to-use inventory
+                management system that simplifies product
+                management, improves productivity and saves
+                valuable time.
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-6 mb-4">
+
+        <div class="section-card h-100 p-5 text-center">
+
+            <div class="stats-icon purple mb-4">
+
+                <i class="fas fa-eye"></i>
+
+            </div>
+
+            <h2 class="fw-bold mb-3">
+
+                Our Vision
+
+            </h2>
+
+            <p class="text-muted">
+
+                To become one of the most reliable inventory
+                management platforms by combining modern UI,
+                Artificial Intelligence and automation for
+                every business.
+
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ===========================
+      FEATURES
+=========================== -->
+
+<div class="text-center mt-5 mb-4">
+
+    <h2 class="fw-bold">
+
+        <i class="fas fa-star text-warning"></i>
+
+        Our Features
+
+    </h2>
+
+    <p class="text-muted">
+
+        Everything you need to manage your pharmacy inventory.
+
+    </p>
+
+</div>
+
+<div class="row g-4">
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="feature-card text-center p-4 h-100">
+
+            <div class="stats-icon blue">
+
+                <i class="fas fa-box-open"></i>
+
+            </div>
+
+            <h4 class="fw-bold mt-3">
+
+                Product Management
+
+            </h4>
+
+            <p class="text-muted">
+
+                Add, update and organize products with stock,
+                pricing and category management.
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="feature-card text-center p-4 h-100">
+
+            <div class="stats-icon green">
+
+                <i class="fas fa-cart-shopping"></i>
+
+            </div>
+
+            <h4 class="fw-bold mt-3">
+
+                Order Tracking
+
+            </h4>
+
+            <p class="text-muted">
+
+                Track customer orders,
+                deliveries and order status in real time.
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="feature-card text-center p-4 h-100">
+
+            <div class="stats-icon orange">
+
+                <i class="fas fa-chart-column"></i>
+
+            </div>
+
+            <h4 class="fw-bold mt-3">
+
+                Dashboard Analytics
+
+            </h4>
+
+            <p class="text-muted">
+
+                Interactive charts and business reports
+                to monitor your inventory performance.
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="feature-card text-center p-4 h-100">
+
+            <div class="stats-icon purple">
+
+                <i class="fas fa-robot"></i>
+
+            </div>
+
+            <h4 class="fw-bold mt-3">
+
+                AI Assistant
+
+            </h4>
+
+            <p class="text-muted">
+
+                Smart AI assistant for answering inventory
+                questions and providing helpful suggestions.
+
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ===========================
+      WHY CHOOSE US
+=========================== -->
+
+<div class="section-card mt-5 p-5">
+
+    <div class="text-center mb-5">
+
+        <h2 class="fw-bold">
+
+            <i class="fas fa-gem text-primary"></i>
+
+            Why Choose Pharmacy Inventory Management System?
+
+        </h2>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-6">
+
+            <ul class="list-group list-group-flush">
+
+                <li class="list-group-item">
+                    ✅ Modern & Responsive Design
+                </li>
+
+                <li class="list-group-item">
+                    ✅ Easy Product Management
+                </li>
+
+                <li class="list-group-item">
+                    ✅ Smart Dashboard
+                </li>
+
+                <li class="list-group-item">
+                    ✅ Secure User Authentication
+                </li>
+
+            </ul>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <ul class="list-group list-group-flush">
+
+                <li class="list-group-item">
+                    ✅ AI Powered Assistant
+                </li>
+
+                <li class="list-group-item">
+                    ✅ Fast Inventory Search
+                </li>
+
+                <li class="list-group-item">
+                    ✅ Order Management
+                </li>
+
+                <li class="list-group-item">
+                    ✅ Mobile Friendly Interface
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- ===========================
+      TECHNOLOGIES
+=========================== -->
+
+<div class="text-center mt-5 mb-4">
+
+    <h2 class="fw-bold">
+
+        <i class="fas fa-code text-primary"></i>
+
+        Technologies Used
+
+    </h2>
+
+    <p class="text-muted">
+
+        Modern technologies used to build the Pharmacy Inventory System.
+
+    </p>
+
+</div>
+
+<div class="row g-4">
+
+    <div class="col-md-3">
+
+        <div class="feature-card text-center p-4 h-100">
+
+            <i class="fab fa-python fa-4x text-primary mb-3"></i>
+
+            <h4>Python</h4>
+
+            <p class="text-muted">
+
+                Backend programming using Flask framework.
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="feature-card text-center p-4 h-100">
+
+            <i class="fab fa-html5 fa-4x text-danger mb-3"></i>
+
+            <h4>HTML5</h4>
+
+            <p class="text-muted">
+
+                Responsive page structure and semantic layout.
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="feature-card text-center p-4 h-100">
+
+            <i class="fab fa-css3-alt fa-4x text-info mb-3"></i>
+
+            <h4>CSS3</h4>
+
+            <p class="text-muted">
+
+                Beautiful modern UI with animations and effects.
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="feature-card text-center p-4 h-100">
+
+            <i class="fab fa-bootstrap fa-4x text-purple mb-3"></i>
+
+            <h4>Bootstrap 5</h4>
+
+            <p class="text-muted">
+
+                Responsive grid system and reusable components.
+
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ===========================
+      SYSTEM INFORMATION
+=========================== -->
+
+<div class="section-card mt-5 p-5">
+
+    <div class="text-center mb-4">
+
+        <h2 class="fw-bold">
+
+            <i class="fas fa-server text-success"></i>
+
+            System Information
+
+        </h2>
+
+    </div>
+
+    <div class="row text-center">
+
+        <div class="col-md-3">
+
+            <h1 class="text-primary fw-bold">120+</h1>
+
+            <p class="text-muted">Products</p>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <h1 class="text-success fw-bold">500+</h1>
+
+            <p class="text-muted">Customers</p>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <h1 class="text-warning fw-bold">1500+</h1>
+
+            <p class="text-muted">Orders</p>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <h1 class="text-danger fw-bold">99.9%</h1>
+
+            <p class="text-muted">Uptime</p>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ===========================
+      DEVELOPER
+=========================== -->
+
+<div class="section-card mt-5 p-5">
+
+    <div class="row align-items-center">
+
+        <div class="col-lg-4 text-center">
+
+            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                 width="180"
+                 class="rounded-circle shadow">
+
+        </div>
+
+        <div class="col-lg-8">
+
+            <h2 class="fw-bold">
+
+                <i class="fas fa-user-circle text-primary"></i>
+
+                Developer
+
+            </h2>
+
+            <h3 class="mt-3">
+
+                Soham Pande
+
+            </h3>
+
+            <p class="fw-bold text-primary">Created by Soham Pande</p>
+
+            <p class="text-muted mt-3">
+
+                Pharmacy Inventory Management System is developed using
+                Python Flask, Bootstrap, HTML, CSS,
+                JavaScript and SQLite.
+
+                The goal of this project is to provide
+                a modern inventory management solution
+                with AI assistance, beautiful dashboard,
+                responsive design and easy product management.
+
+            </p>
+
+            <div class="mt-4">
+
+                <span class="badge bg-primary p-3 me-2">
+
+                    Python
+
+                </span>
+
+                <span class="badge bg-success p-3 me-2">
+
+                    Flask
+
+                </span>
+
+                <span class="badge bg-danger p-3 me-2">
+
+                    HTML
+
+                </span>
+
+                <span class="badge bg-info p-3 me-2">
+
+                    CSS
+
+                </span>
+
+                <span class="badge bg-warning text-dark p-3">
+
+                    Bootstrap
+
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- ===========================
+      CONTACT & SOCIAL MEDIA
+=========================== -->
+
+<div class="section-card mt-5 p-5">
+
+    <div class="text-center mb-5">
+
+        <h2 class="fw-bold">
+
+            <i class="fas fa-address-card text-primary"></i>
+
+            Contact & Social Media
+
+        </h2>
+
+        <p class="text-muted">
+
+            Stay connected with us through our official social platforms.
+
+        </p>
+
+    </div>
+
+    <div class="row">
+
+        <!-- Contact -->
+
+        <div class="col-lg-5">
+
+            <h4 class="fw-bold mb-4">
+
+                Contact Information
+
+            </h4>
+
+            <div class="mb-4">
+
+                <i class="fas fa-envelope fa-lg text-primary me-3"></i>
+
+                <strong>Email</strong><br>
+
+                <span class="text-muted">
+
+                    soham6122005@gmail.com
+
+                </span>
+
+            </div>
+
+            <div class="mb-4">
+
+                <i class="fas fa-phone fa-lg text-success me-3"></i>
+
+                <strong>Phone</strong><br>
+
+                <span class="text-muted">
+
+                    +91 9552275544
+
+                </span>
+
+            </div>
+
+            <div class="mb-4">
+
+                <i class="fas fa-location-dot fa-lg text-danger me-3"></i>
+
+                <strong>Address</strong><br>
+
+                <span class="text-muted">
+
+                   Hingoli, Maharashtra, India
+
+                </span>
+
+            </div>
+
+        </div>
+
+        <!-- Social -->
+
+        <div class="col-lg-7">
+
+            <div class="row g-3">
+
+                <div class="col-md-6">
+
+                    <a href="https://facebook.com"
+                       target="_blank"
+                       class="btn btn-primary w-100 p-3 rounded-4">
+
+                        <i class="fab fa-facebook-f me-2"></i>
+
+                        Facebook
+
+                    </a>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <a href="https://instagram.com"
+                       target="_blank"
+                       class="btn btn-danger w-100 p-3 rounded-4">
+
+                        <i class="fab fa-instagram me-2"></i>
+
+                        Instagram
+
+                    </a>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <a href="https://linkedin.com"
+                       target="_blank"
+                       class="btn btn-info w-100 p-3 rounded-4 text-white">
+
+                        <i class="fab fa-linkedin me-2"></i>
+
+                        LinkedIn
+
+                    </a>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <a href="https://github.com"
+                       target="_blank"
+                       class="btn btn-dark w-100 p-3 rounded-4">
+
+                        <i class="fab fa-github me-2"></i>
+
+                        GitHub
+
+                    </a>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <a href="https://youtube.com"
+                       target="_blank"
+                       class="btn btn-danger w-100 p-3 rounded-4">
+
+                        <i class="fab fa-youtube me-2"></i>
+
+                        YouTube
+
+                    </a>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <a href="https://x.com"
+                       target="_blank"
+                       class="btn btn-secondary w-100 p-3 rounded-4">
+
+                        <i class="fab fa-x-twitter me-2"></i>
+
+                        X (Twitter)
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ===========================
+      THANK YOU SECTION
+=========================== -->
+
+<div class="main-card text-center mt-5">
+
+    <i class="fas fa-heart fa-4x mb-4"></i>
+
+    <h2 class="fw-bold">
+
+        Thank You For Visiting
+
+    </h2>
+
+    <p class="mt-4 fs-5">
+
+        Thank you for using the Pharmacy Inventory Management System.
+
+        We continuously work to improve the application by
+        providing a modern interface, AI-powered assistance,
+        better inventory management and an excellent user experience.
+
+    </p>
+
+    <a href="{{ url_for('home') }}"
+       class="btn btn-light btn-lg rounded-pill px-5 mt-4">
+
+        <i class="fas fa-house me-2"></i>
+
+        Back to Home
+
+    </a>
+
+</div>
+
+{% endblock %}

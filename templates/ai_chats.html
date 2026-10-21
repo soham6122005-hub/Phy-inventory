@@ -1,0 +1,420 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    
+body{
+    background:linear-gradient(135deg,#6f42c1,#8b5cf6,#60a5fa);
+    min-height:100vh;
+}
+
+.page-header{
+     background:linear-gradient(135deg,#6f42c1,#8b5cf6,#60a5fa);
+    border-radius:30px;
+    padding:40px;
+    color:white;
+    margin-bottom:30px;
+    box-shadow:0 10px 25px rgba(0,0,0,.1);
+}
+
+
+.chat-container{
+    min-height:350px;
+    max-height:450px;
+    overflow-y:auto;
+}
+
+.user-msg{
+    background:linear-gradient(135deg,#6f42c1,#8b5cf6,#60a5fa);
+    color:white;
+    padding:15px;
+    border-radius:20px;
+    display:inline-block;
+    max-width:75%;
+}
+
+.ai-msg{
+    background:white;
+    color:#111827;
+    padding:15px;
+    border-radius:20px;
+    display:inline-block;
+    max-width:75%;
+    box-shadow:0 5px 15px rgba(0,0,0,.1);
+}
+
+.suggestion-card{
+    cursor:pointer;
+    transition:.3s;
+    border-radius:15px;
+}
+
+.suggestion-card:hover{
+    transform:translateY(-5px);
+}
+
+</style>
+
+<div class="container py-4">
+
+    <!-- Hero Section -->
+
+    <div class="main-card mb-5">
+
+        <div class="row align-items-center">
+
+            <div class="col-lg-8">
+
+                <h1 class="fw-bold">
+
+                    <i class="fas fa-wand-magic-sparkles"></i>
+
+                    AI Product Assistant
+
+                </h1>
+
+                <p class="fs-5 mt-3">
+
+                    Ask anything about medicines,
+                    pharmacy inventory and health products.
+
+                </p>
+
+                <h4>
+                    🤖 Powered by Groq AI
+                </h4>
+
+            </div>
+
+            <div class="col-lg-4 text-center">
+
+                <img src="https://cdn-icons-png.flaticon.com/512/9831/9831496.png"
+                     width="180">
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Suggested Questions -->
+
+    <h2 class="text-center text-white fw-bold mb-4">
+
+        💡 Suggested Questions
+
+    </h2>
+
+    <div class="row g-4 mb-5">
+
+        <div class="col-md-4">
+
+            <div class="card suggestion-card feature-card bg-primary text-white p-3"
+                 onclick="fillQuestion(this)">
+
+                <h5>
+                    Best medicine for fever and cold?
+                </h5>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card suggestion-card feature-card bg-success text-white p-3"
+                 onclick="fillQuestion(this)">
+
+                <h5>
+                    Compare Paracetamol vs Ibuprofen
+                </h5>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card suggestion-card feature-card bg-info text-white p-3"
+                 onclick="fillQuestion(this)">
+
+                <h5>
+                    Recommend vitamins for daily use
+                </h5>
+
+            </div>
+
+        </div>
+
+    </div>
+        <!-- AI Chat Window -->
+
+    <div class="card feature-card border-0 mb-5">
+
+        <div class="card-header text-white"
+             style="background:linear-gradient(135deg,#6f42c1,#8b5cf6,#60a5fa);">
+
+            <h4 class="mb-0">
+
+                <i class="fas fa-comments"></i>
+                Groq AI Conversation
+
+            </h4>
+
+        </div>
+
+        <div class="card-body chat-container bg-light">
+
+            {% if question %}
+
+            <!-- User Message -->
+
+            <div class="text-end mb-4">
+
+                <div class="user-msg">
+
+                    <strong>
+                        <i class="fas fa-user"></i>
+                        You
+                    </strong>
+
+                    <hr>
+
+                    {{ question }}
+
+                </div>
+
+            </div>
+
+            <!-- AI Response -->
+
+            <div class="mb-4">
+
+                <div class="ai-msg">
+
+                    <strong class="text-primary">
+
+                        <i class="fas fa-robot"></i>
+                        Groq AI
+
+                    </strong>
+
+                    <hr>
+
+                    <p style="white-space:pre-wrap;">
+                        {{ answer }}
+                    </p>
+
+                </div>
+
+            </div>
+
+            {% else %}
+
+            <div class="text-center py-5">
+
+                <i class="fas fa-robot fa-5x text-primary mb-3"></i>
+
+                <h3>Start a Conversation</h3>
+
+                <p class="text-muted">
+
+                    Ask questions about products,
+                    specifications, prices and recommendations.
+
+                </p>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <!-- Ask Question -->
+
+    <div class="card feature-card border-0 mb-5">
+
+        <div class="card-header text-white"
+             style="background:linear-gradient(135deg,#6f42c1,#8b5cf6,#60a5fa);">
+
+            <h4 class="mb-0">
+
+                <i class="fas fa-paper-plane"></i>
+                Ask AI Assistant
+
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST">
+
+                <label class="form-label fw-bold">
+
+                    Enter Your Question
+
+                </label>
+
+                <textarea
+                    name="question"
+                    rows="5"
+                    class="form-control mb-3"
+                    placeholder="Example: What is the use of Paracetamol 500 mg?"
+                    required></textarea>
+
+                <button class="btn btn-primary btn-round">
+
+                    <i class="fas fa-paper-plane"></i>
+
+                    Ask Groq AI
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+        <!-- AI Capabilities -->
+
+    <h2 class="text-center fw-bold text-white mb-4">
+
+        🚀 AI Capabilities
+
+    </h2>
+
+    <div class="row g-4 mb-5">
+
+        <div class="col-md-3">
+
+            <div class="feature-card text-center text-white p-4"
+                 style="background:linear-gradient(135deg,#6f42c1,#8b5cf6,#60a5fa);">
+
+                <i class="fas fa-balance-scale fa-3x mb-3"></i>
+
+                <h5>Comparison</h5>
+
+                <p>
+                    Compare medicines instantly
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="feature-card text-center text-white p-4"
+                 style="background:linear-gradient(135deg,#6f42c1,#8b5cf6,#60a5fa);">
+
+                <i class="fas fa-shopping-bag fa-3x mb-3"></i>
+
+                <h5>Medicine Guide</h5>
+
+                <p>
+                    Smart medicine suggestions
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="feature-card text-center text-white p-4"
+                 style="background:linear-gradient(135deg,#6f42c1,#8b5cf6,#60a5fa);">
+
+                <i class="fas fa-pills fa-3x mb-3"></i>
+
+                <h5>Dosage & Usage</h5>
+
+                <p>
+                    Medicine dosage and usage guidance
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="feature-card text-center text-white p-4"
+                 style="background:linear-gradient(135deg,#6f42c1,#8b5cf6,#60a5fa);">
+
+                <i class="fas fa-tags fa-3x mb-3"></i>
+
+                <h5>Price Analysis</h5>
+
+                <p>
+                    Budget-friendly recommendations
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Smart Features Banner -->
+
+    <div class="main-card mb-5">
+
+        <h2 class="text-center fw-bold">
+
+            🤖 Smart Inventory Powered by AI
+
+        </h2>
+
+        <p class="text-center mt-3 fs-5">
+
+            Get instant answers, compare medicines,
+            get dosage guidance and manage your
+            pharmacy inventory efficiently using Groq AI.
+
+        </p>
+
+        <div class="row text-center mt-4">
+
+            <div class="col-md-3">
+                <h1>📦</h1>
+                <h5>Inventory</h5>
+            </div>
+
+            <div class="col-md-3">
+                <h1>⚡</h1>
+                <h5>Fast Response</h5>
+            </div>
+
+            <div class="col-md-3">
+                <h1>🧠</h1>
+                <h5>AI Powered</h5>
+            </div>
+
+            <div class="col-md-3">
+                <h1>🔒</h1>
+                <h5>Secure</h5>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+function fillQuestion(element){
+
+    document.querySelector(
+        'textarea'
+    ).value = element.innerText.trim();
+
+}
+
+</script>
+
+{% endblock %}
